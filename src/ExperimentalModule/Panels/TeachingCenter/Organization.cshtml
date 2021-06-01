@@ -1,0 +1,156 @@
+﻿@model Tenant.Entities.Affiliation
+@{
+    ViewData["Title"] = "Organization";
+    IReadOnlyList<Microsoft.AspNetCore.Identity.IUser> admin = ViewBag.Administrators;
+    ILookup<int, string> userRoles = ViewBag.UserRoles;
+    IReadOnlyList<Tenant.Entities.VerifyCode> verifyCodes = ViewBag.VerifyCodes;
+}
+
+<div class="row">
+<div class="container card-container">
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2 class="mb-3">Basic Information</h2>
+
+<style>
+#basic-information {
+  width: 100%;
+}
+
+#basic-information th,
+#basic-information td {
+  vertical-align: middle;
+  display: block;
+}
+
+#basic-information th {
+  margin-bottom: .25em;
+}
+
+#basic-information td {
+  margin-bottom: 1em;
+}
+
+@@media (min-width: 768px) {
+  #basic-information th,
+  #basic-information td {
+    display: table-cell;
+  }
+
+  #basic-information td {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  #basic-information th {
+    max-width: 5em;
+  }
+}
+</style>
+
+<table id="basic-information">
+    <tr>
+        <th>ID</th>
+        <td><input readonly type="text" value="@Model.Id" class="form-control" /></td>
+    </tr>
+    <tr>
+        <th>Shortname</th>
+        <td><input readonly type="text" value="@Model.Abbreviation" class="form-control" /></td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td><input readonly type="text" value="@Model.Name" class="form-control" /></td>
+    </tr>
+    <tr>
+        <th>Country</th>
+        <td><input readonly type="text" value="@(Model.CountryCode ?? "(none)")" class="form-control" /></td>
+    </tr>
+    <tr>
+        <th>Student email suffix</th>
+        <td><input readonly type="text" value="@(Model.EmailSuffix ?? "(none)")" class="form-control" /></td>
+    </tr>
+    <tr>
+        <th>Logo</th>
+        <td><img src="~/images/affiliations/@(Model.Abbreviation).png" width="40" height="40" /></td>
+    </tr>
+</table>
+
+</div>
+</div>
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2>Tenant Administrators</h2>
+<div class="card-table">
+<table class="table table-hover">
+<thead>
+    <tr role="row">
+        <th scope="col">user</th>
+        <th scope="col">email</th>
+        <th scope="col" class="d-none d-md-table-cell">roles</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var user in admin)
+{
+    <tr data-toggle="gotoUrlV2" data-href="@Url.Action("Show", "Profile", new { area = "Account", username = user.UserName })">
+        <td>@user.UserName (u@(user.Id))</td>
+        <td>@user.Email</td>
+        <td class="d-none d-md-table-cell"><tags color="secondary" list="@string.Join(',', userRoles[user.Id].OrderBy(a => a))" /></td>
+    </tr>
+}
+@if (admin.Count == 0)
+{ 
+    <tr>
+        <td colspan="3" class="text-md-center">
+            No data available in table
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2>Invitation Codes</h2>
+<div class="card-table">
+<table class="table table-hover">
+<thead>
+    <tr role="row">
+        <th scope="col">code</th>
+        <th scope="col">time</th>
+        <th scope="col" class="d-none d-md-table-cell"></th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var code in verifyCodes)
+{
+    <tr>
+        <td>@(code.Id)# <span class="hostname">@code.Code</span></td>
+        <td>@code.CreationTime</td>
+        <td class="d-none d-md-table-cell">
+            <span title="Redemption count"><i class="far fa-chart-bar"></i> @code.RedeemCount</span>
+            <span title="Creator"><i class="far fa-user ml-2"></i> @(admin.FirstOrDefault(u => u.Id == code.UserId)?.UserName ?? "UNKNOWN") (u@(code.UserId))</span>
+        </td>
+    </tr>
+}
+@if (verifyCodes.Count == 0)
+{ 
+    <tr>
+        <td colspan="3" class="text-md-center">
+            No data available in table
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
+</div>

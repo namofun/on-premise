@@ -1,0 +1,44 @@
+﻿@inject IMenuProvider Menu
+@{
+    ViewData["UseCardTheme"] = true;
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Banner {
+    <style>body { padding-top: 56px; }</style>
+    <div class="nav-scroller bg-white shadow-sm">
+    <nav class="nav nav-underline">
+        @foreach (var menu in Menu.Find("Menu_TeachingCenter"))
+        {
+            if (!menu.Satisfy(ViewContext)) { continue; }
+            if (menu is ISubmenu submenu)
+            {
+        <a>Submenu not implemented</a>
+            }
+            else
+            {
+                var entry = (IMenuEntry)menu;
+        <a class="nav-link @menu.Active(ViewContext)" data-order="@menu.Priority" href="@entry.GetLink(Url, ViewContext)" id="@entry.Id">@entry.Title</a>
+            }
+        }
+    </nav>
+    </div>
+}
+
+@section Header {
+    @RenderSection("Header", required: false)
+}
+
+@section Footer {
+    @RenderSection("Footer", required: false)
+}
+
+@section BannerFooter {
+    @RenderSection("BannerFooter", required: false)
+}
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
+
+@RenderBody()

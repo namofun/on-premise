@@ -1,0 +1,233 @@
+﻿@{
+    ViewData["Title"] = "Teaching Center";
+    IPagedList<Ccs.Models.ContestListModel> contests = ViewBag.Contests;
+    IPagedList<Polygon.Entities.Problem> problems = ViewBag.Problems;
+    IPagedList<Tenant.Entities.Class> classes = ViewBag.Classes;
+}
+
+@functions {
+    static string ContestState(Ccs.Models.ContestListModel c)
+    {
+        if (!c.StartTime.HasValue) return "primary";
+        if (DateTimeOffset.Now < c.StartTime) return "warning";
+        if (DateTimeOffset.Now < c.StartTime + c.Duration) return "success";
+        return "secondary";
+    }
+
+    static string ContestState2(Ccs.Models.ContestListModel c)
+    {
+        if (c.Kind == Ccs.CcsDefaults.KindProblemset) return "open";
+        if (!c.StartTime.HasValue) return "scheduling";
+        if (DateTimeOffset.Now < c.StartTime) return "pending";
+        if (DateTimeOffset.Now < c.StartTime + c.Duration) return "running";
+        return "finished";
+    }
+
+    static string ContestKind(Ccs.Models.ContestListModel c)
+    {
+        return c.Kind switch
+        {
+            0 => "Contest",
+            1 => "Practice",
+            2 => "Problemset",
+            _ => "Unknown",
+        };
+    }
+
+    static string ContestRule(Ccs.Models.ContestListModel c)
+    {
+        return c.RankingStrategy switch
+        {
+            0 => "ACM-ICPC",
+            1 => "IOI",
+            2 => "Codeforces",
+            _ => "Unknown",
+        };
+    }
+}
+
+<div class="row">
+<div class="container card-container">
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2 class="mb-3">Overview</h2>
+<div class="row">
+<div class="col-md-4">
+    <a class="breadcrumb mb-md-0 text-reset text-decoration-none" asp-area="Dashboard" asp-controller="Contests" asp-action="List">
+        <div style="width:100%;color:#6c757d">
+            <span>Contests</span>
+            <span class="float-right"><i class="fas fa-trophy"></i></span>
+        </div>
+        <h3 class="mb-0">
+            @contests.TotalCount
+        </h3>
+    </a>
+</div>
+<div class="col-md-4">
+    <a class="breadcrumb mb-md-0 text-reset text-decoration-none" asp-area="Dashboard" asp-controller="Problems" asp-action="List">
+        <div style="width:100%;color:#6c757d">
+            <span>Problems</span>
+            <span class="float-right"><i class="fas fa-book-open"></i></span>
+        </div>
+        <h3 class="mb-0">
+            @problems.TotalCount
+        </h3>
+    </a>
+</div>
+<div class="col-md-4">
+    <a class="breadcrumb mb-0 text-reset text-decoration-none" asp-area="Dashboard" asp-controller="Classes" asp-action="List">
+        <div style="width:100%;color:#6c757d">
+            <span>Student Groups</span>
+            <span class="float-right"><i class="fas fa-users"></i></span>
+        </div>
+        <h3 class="mb-0">
+            @classes.TotalCount
+        </h3>
+    </a>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2>
+    Contests
+    <a class="h2-more" asp-area="Dashboard" asp-controller="Contests" asp-action="List">More &raquo;</a>
+</h2>
+<div class="card-table">
+<table class="table table-hover">
+<thead>
+    <tr role="row">
+        <th scope="col" style="min-width:17em">name</th>
+        <th scope="col" style="min-width:13em">time</th>
+        <th scope="col" style="min-width:10em" class="d-none d-md-table-cell">details</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var cts in contests)
+{
+    <tr data-toggle="gotoUrlV2" data-href="@Url.Action("Home", "Jury", new { area = "Contest", cid = cts.ContestId })">
+        <td>
+            <i class="fas fa-info-circle text-@ContestState(cts)" title="@ContestState2(cts)"></i> @ContestKind(cts) @cts.ShortName
+            <br />
+            @(string.IsNullOrEmpty(cts.Name) ? "(unnamed)" : cts.Name)
+        </td>
+        <td>
+            <span title="start time"><i class="far fa-calendar-alt fa-fw"></i> @(cts.StartTime.HasValue ? Html.CstTime(cts.StartTime) : "N/A")</span>
+            <br />
+            <span title="duration"><i class="far fa-clock fa-fw"></i> +@(cts.Duration?.ToString() ?? "N/A")</span>
+        </td>
+        <td class="d-none d-md-table-cell">
+            <span title="# teams" class="mr-2"><i class="far fa-user fa-fw"></i> @cts.TeamCount</span>
+            <span title="# problems"><i class="far fa-file-pdf fa-fw"></i> @cts.ProblemCount</span>
+            <br />
+            <span title="rule"><i class="far fa-futbol fa-fw"></i> @ContestRule(cts)</span>
+        </td>
+    </tr>
+}
+@if (contests.Count == 0)
+{ 
+    <tr>
+        <td colspan="3" class="text-md-center">
+            No data available in table
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+    
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2>
+    Problems
+    <a class="h2-more" asp-area="Dashboard" asp-controller="Problems" asp-action="List">More &raquo;</a>
+</h2>
+<div class="card-table">
+<table class="table table-hover">
+<thead>
+    <tr role="row">
+        <th scope="col">name</th>
+        <th scope="col" class="d-none d-md-table-cell">limits</th>
+        <th scope="col">source</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var prob in problems)
+{
+    <tr data-toggle="gotoUrlV2" data-href="@Url.Action("Overview", "Editor", new { area = "Polygon", probid = prob.Id })">
+        <td class="align-middle">
+            @prob.Title <span asp-show-if="!prob.AllowJudge" title="disabled" class="badge badge-secondary">disabled</span>
+        </td>
+        <td class="d-none d-md-table-cell">
+            <span title="time limit"><i class="far fa-clock fa-fw"></i> @(prob.TimeLimit / 1000.0)s</span>
+            <br />
+            <span title="memory limit"><i class="far fa-chart-bar fa-fw"></i> @(prob.MemoryLimit / 1024) MB</span>
+        </td>
+        <td>
+            <span title="source" class="@(string.IsNullOrEmpty(prob.Source) ? "disabled" : "")"><i class="far fa-paper-plane fa-fw"></i> @(string.IsNullOrEmpty(prob.Source) ? "empty" : prob.Source)</span>
+            <br />
+            <span title="tags" class="@(string.IsNullOrEmpty(prob.TagName) ? "disabled" : "")"><i class="far fa-flag fa-fw"></i> @(string.IsNullOrEmpty(prob.TagName) ? "empty" : prob.TagName)</span>
+        </td>
+    </tr>
+}
+@if (problems.Count == 0)
+{ 
+    <tr>
+        <td colspan="3" class="text-md-center">
+            No data available in table
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="card window-card container-fluid">
+<div class="card-body">
+<h2>
+    Student Groups
+    <a class="h2-more" asp-area="Dashboard" asp-controller="Classes" asp-action="List">More &raquo;</a>
+</h2>
+<div class="card-table">
+<table class="table table-hover">
+<thead>
+    <tr role="row">
+        <th scope="col">name</th>
+        <th scope="col">count</th>
+        <th scope="col" class="d-none d-md-table-cell">create time</th>
+        <th scope="col" class="d-none d-md-table-cell">creator</th>
+    </tr>
+</thead>
+<tbody>
+@foreach (var stu in classes)
+{
+    <tr data-toggle="gotoUrlV2" data-href="@Url.Action("Detail", "Classes", new { area = "Dashboard", clsid = stu.Id })">
+        <td>@stu.Name</td>
+        <td><i class="d-md-none far fa-user"></i> @stu.Count</td>
+        <td class="d-none d-md-table-cell">@Html.CstTime(stu.CreationTime)</td>
+        <td class="d-none d-md-table-cell">@(stu.UserName ?? "N/A")</td>
+    </tr>
+}
+@if (classes.Count == 0)
+{
+    <tr>
+        <td colspan="4" class="text-md-center">
+            No data available in table
+        </td>
+    </tr>
+}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
+</div>

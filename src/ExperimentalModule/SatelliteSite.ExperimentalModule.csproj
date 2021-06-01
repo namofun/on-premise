@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="SatelliteSite.Substrate" Version="$(SubstrateVersion)" />
+    <PackageReference Include="SatelliteSite.StudentModule" Version="$(TenantVersion)" />
+    <PackageReference Include="SatelliteSite.JobsModule" Version="$(SubstrateVersion)" />
+    <PackageReference Include="Polygon.Abstraction" Version="$(PolygonVersion)" />
+    <PackageReference Include="Ccs.Abstraction" Version="$(CcsVersion)" />
+  </ItemGroup>
+
+</Project>
