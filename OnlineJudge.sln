@@ -5,7 +5,14 @@ VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{086AD54D-2103-47DE-8960-D3F652352BB3}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
+		Dockerfile = Dockerfile
+		jop.service = jop.service
+		NuGet.config = NuGet.config
+		publish.sh = publish.sh
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JudgeOnPremise", "src\OnPremise\JudgeOnPremise.csproj", "{0D6CE3F0-27E8-4833-A579-6B6641763A9F}"
@@ -13,6 +20,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteSite.OnPremiseModule", "src\OnPremiseModule\SatelliteSite.OnPremiseModule.csproj", "{AF0B6D90-BE94-4D04-A4EC-15C8C20D559E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteSite.ExperimentalModule", "src\ExperimentalModule\SatelliteSite.ExperimentalModule.csproj", "{D144814B-F351-407D-8A2D-6493F8AFFB61}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteSite.Migrations.SqlServer", "src\Migrations.SqlServer\SatelliteSite.Migrations.SqlServer.csproj", "{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SatelliteSite.Migrations.Postgres", "src\Migrations.Postgres\SatelliteSite.Migrations.Postgres.csproj", "{B51014D1-26C2-4DEC-A674-3C0B65617413}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +71,30 @@ Global
 		{D144814B-F351-407D-8A2D-6493F8AFFB61}.Release|x64.Build.0 = Release|Any CPU
 		{D144814B-F351-407D-8A2D-6493F8AFFB61}.Release|x86.ActiveCfg = Release|Any CPU
 		{D144814B-F351-407D-8A2D-6493F8AFFB61}.Release|x86.Build.0 = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|x64.Build.0 = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Debug|x86.Build.0 = Debug|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|x64.ActiveCfg = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|x64.Build.0 = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|x86.ActiveCfg = Release|Any CPU
+		{D6292F57-A85C-43F7-BCF8-B0D5AA938D0C}.Release|x86.Build.0 = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|x64.Build.0 = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Debug|x86.Build.0 = Debug|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|x64.ActiveCfg = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|x64.Build.0 = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|x86.ActiveCfg = Release|Any CPU
+		{B51014D1-26C2-4DEC-A674-3C0B65617413}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

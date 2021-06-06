@@ -17,7 +17,12 @@
     <PackageReference Include="Ccs.Connector.PlagiarismDetect" Version="$(CcsVersion)" />
     <PackageReference Include="Ccs.Connector.OpenXml" Version="$(CcsVersion)" />
     <PackageReference Include="Ccs.Connector.Jobs" Version="$(CcsVersion)" />
+    <PackageReference Include="Ccs.Registration.TenantRelated" Version="$(CcsVersion)" />
+
+    <PackageReference Include="Plag.Backend.Roles.Storage" Version="$(PlagVersion)" />
     <PackageReference Include="Polygon.DataAccess" Version="$(PolygonVersion)" />
+    <PackageReference Include="Polygon.Seeds" Version="$(PolygonVersion)" />
+    <PackageReference Include="Ccs.Storage.Relational" Version="$(CcsVersion)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -33,11 +33,11 @@ namespace SatelliteSite
                 .AddModule<GroupModule.GroupModule<DefaultContext>>()
                 .AddModule<JobsModule.JobsModule<XylabUser, DefaultContext>>()
                 .AddModule<StudentModule.StudentModule<XylabUser, Role, DefaultContext>>()
-                .AddModule<PolygonModule.PolygonModule<Polygon.DefaultRole<DefaultContext, QueryCache>>>()
+                .AddModule<PolygonModule.PolygonModule<Polygon.DefaultRole<DefaultContext, SqlServerQueryCache>>>()
                 .AddModule<ContestModule.ContestModule<Ccs.RelationalRole<XylabUser, Role, DefaultContext>>>()
                 .AddModule<PlagModule.PlagModule<Plag.Backend.StorageBackendRole<DefaultContext>>>()
                 .AddModule<ExperimentalModule.ExperimentalModule>()
-                .AddDatabase<DefaultContext>((c, b) => b.UseSqlServer(c.GetConnectionString("UserDbConnection"), b => b.UseBulk()))
+                .AddDatabase<DefaultContext>((c, b) => b.UseSqlServer(c.GetConnectionString("UserDbConnection"), b => b.UseBulk().MigrationsAssembly("SatelliteSite.Migrations.SqlServer")))
                 .ConfigureSubstrateDefaults<DefaultContext>()
                 .ConfigureServices((context, services) =>
                 {
