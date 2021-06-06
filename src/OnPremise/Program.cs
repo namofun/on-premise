@@ -33,11 +33,11 @@ namespace SatelliteSite
                 .AddModule<GroupModule.GroupModule<DefaultContext>>()
                 .AddModule<JobsModule.JobsModule<XylabUser, DefaultContext>>()
                 .AddModule<StudentModule.StudentModule<XylabUser, Role, DefaultContext>>()
-                .AddModule<PolygonModule.PolygonModule<Polygon.DefaultRole<DefaultContext, SqlServerQueryCache>>>()
+                .AddModule<PolygonModule.PolygonModule<Polygon.DefaultRole<DefaultContext, DefaultQueryCache>>>()
                 .AddModule<ContestModule.ContestModule<Ccs.RelationalRole<XylabUser, Role, DefaultContext>>>()
                 .AddModule<PlagModule.PlagModule<Plag.Backend.StorageBackendRole<DefaultContext>>>()
                 .AddModule<ExperimentalModule.ExperimentalModule>()
-                .AddDatabase<DefaultContext>((c, b) => b.UseSqlServer(c.GetConnectionString("UserDbConnection"), b => b.UseBulk().MigrationsAssembly("SatelliteSite.Migrations.SqlServer")))
+                .AddDatabase<DefaultContext>((c, b) => b.UseSqlServer(c.GetConnectionString("SqlServerDbConnection"), b => b.UseBulk().MigrationsAssembly("SatelliteSite.Migrations.SqlServer")))
                 .ConfigureSubstrateDefaults<DefaultContext>()
                 .ConfigureServices((context, services) =>
                 {
@@ -70,6 +70,11 @@ namespace SatelliteSite
                     });
 
                     services.Configure<Services.AuthMessageSenderOptions>(context.Configuration.GetSection("Mailing"));
+
+                    if (!string.IsNullOrEmpty(context.GetConnectionString("SqlServerDbConnection")))
+                    {
+                        services.AddSingleton<IDurationCalculator, SqlServerTimeDiff>();
+                    }
                 });
     }
 }

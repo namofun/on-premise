@@ -10,8 +10,15 @@ using System.Threading.Tasks;
 
 namespace SatelliteSite
 {
-    public class SqlServerQueryCache : QueryCacheBase<DefaultContext>
+    public class DefaultQueryCache : QueryCacheBase<DefaultContext>
     {
+        private readonly IDurationCalculator _durationCalculator;
+
+        public DefaultQueryCache(IDurationCalculator durationCalculator)
+        {
+            _durationCalculator = durationCalculator;
+        }
+
         public override async Task<IEnumerable<(int UserId, string UserName, AuthorLevel Level)>> FetchPermittedUserAsync(DefaultContext context, int probid)
         {
             var query =
@@ -27,16 +34,14 @@ namespace SatelliteSite
             var query =
                 from s in context.Submissions.WhereIf(predicate != null, predicate)
                 join u in context.Users on new { s.ContestId, s.TeamId } equals new { ContestId = 0, TeamId = u.Id }
-                into uu
-                from u in uu.DefaultIfEmpty()
+                into uu from u in uu.DefaultIfEmpty()
                 join t in context.Teams on new { s.ContestId, s.TeamId } equals new { t.ContestId, t.TeamId }
-                into tt
-                from t in tt.DefaultIfEmpty()
+                into tt from t in tt.DefaultIfEmpty()
                 select new SolutionAuthor(s.Id, s.ContestId, s.TeamId, u.UserName, t.TeamName);
             return query.ToListAsync();
         }
 
-        protected override Expression<Func<DateTimeOffset, DateTimeOffset, double>> CalculateDuration { get; }
-            = (start, end) => EF.Functions.DateDiffMillisecond(start, end) / 1000.0;
+        protected override Expression<Func<DateTimeOffset, DateTimeOffset, double>> CalculateDuration
+            => _durationCalculator.Expression;
     }
 }
