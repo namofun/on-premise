@@ -36,7 +36,7 @@ namespace SatelliteSite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubmissionId");
+                    b.HasAlternateKey("SubmissionId");
 
                     b.ToTable("ContestBalloons");
                 });
@@ -320,6 +320,16 @@ namespace SatelliteSite.Migrations
 
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
+
+                    b.Property<int>("LastAcPublic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("LastAcRestricted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("PointsPublic")
                         .ValueGeneratedOnAdd()
@@ -1746,6 +1756,9 @@ namespace SatelliteSite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ContestId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
@@ -1757,6 +1770,8 @@ namespace SatelliteSite.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
 
                     b.HasIndex("IsPublic");
 
@@ -2330,6 +2345,14 @@ namespace SatelliteSite.Migrations
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Tenant.Entities.Category", b =>
+                {
+                    b.HasOne("Ccs.Entities.Contest", null)
+                        .WithMany()
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Tenant.Entities.Class", b =>

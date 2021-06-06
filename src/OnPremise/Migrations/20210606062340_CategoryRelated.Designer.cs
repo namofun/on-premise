@@ -9,13 +9,13 @@ using SatelliteSite;
 
 namespace SatelliteSite.Migrations
 {
-    partial class BumpToPolygon18
+    partial class CategoryRelated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.13")
+                .HasAnnotation("ProductVersion", "3.1.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -36,7 +36,7 @@ namespace SatelliteSite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubmissionId");
+                    b.HasAlternateKey("SubmissionId");
 
                     b.ToTable("ContestBalloons");
                 });
@@ -321,6 +321,16 @@ namespace SatelliteSite.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
+                    b.Property<int>("LastAcPublic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("LastAcRestricted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<int>("PointsPublic")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -465,6 +475,52 @@ namespace SatelliteSite.Migrations
                     b.HasIndex("AffiliationId");
 
                     b.ToTable("ContestTenants");
+                });
+
+            modelBuilder.Entity("Jobs.Entities.Job", b =>
+                {
+                    b.Property<Guid>("JobId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Arguments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("CompleteTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("Composite")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset>("CreationTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("JobType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ParentJobId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SuggestedFileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("JobId");
+
+                    b.HasIndex("CreationTime");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("ParentJobId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1549,6 +1605,15 @@ namespace SatelliteSite.Migrations
                             Name = "TemporaryTeamAccount",
                             NormalizedName = "TEMPORARYTEAMACCOUNT",
                             ShortName = "temp_team"
+                        },
+                        new
+                        {
+                            Id = -37,
+                            ConcurrencyStamp = "76133040-8512-5021-491b-563056c3f919",
+                            Description = "Plagiarism Detect User",
+                            Name = "PlagUser",
+                            NormalizedName = "PLAGUSER",
+                            ShortName = "plaguser"
                         });
                 });
 
@@ -1691,6 +1756,9 @@ namespace SatelliteSite.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ContestId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
 
@@ -1702,6 +1770,8 @@ namespace SatelliteSite.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestId");
 
                     b.HasIndex("IsPublic");
 
@@ -2029,6 +2099,20 @@ namespace SatelliteSite.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Jobs.Entities.Job", b =>
+                {
+                    b.HasOne("SatelliteSite.XylabUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Jobs.Entities.Job", null)
+                        .WithMany()
+                        .HasForeignKey("ParentJobId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("SatelliteSite.IdentityModule.Entities.Role", null)
@@ -2261,6 +2345,14 @@ namespace SatelliteSite.Migrations
                         .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Tenant.Entities.Category", b =>
+                {
+                    b.HasOne("Ccs.Entities.Contest", null)
+                        .WithMany()
+                        .HasForeignKey("ContestId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Tenant.Entities.Class", b =>

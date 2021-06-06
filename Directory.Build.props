@@ -4,10 +4,10 @@
     <AspNetCoreVersion>3.1.15</AspNetCoreVersion>
     <SubstrateVersion>1.0.39</SubstrateVersion>
     <EFCoreBulkVersion>3.1.26</EFCoreBulkVersion>
-    <CcsVersion>1.0.12</CcsVersion>
+    <CcsVersion>1.0.13</CcsVersion>
     <PolygonVersion>1.0.18</PolygonVersion>
     <PlagVersion>1.2.20</PlagVersion>
-    <TenantVersion>1.0.11</TenantVersion>
+    <TenantVersion>1.0.12</TenantVersion>
     <BloggingVersion>1.1.12</BloggingVersion>
   </PropertyGroup>
 </Project>
