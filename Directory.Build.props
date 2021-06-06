@@ -2,6 +2,7 @@
   <PropertyGroup>
     <GitRepositoryDirectory>$(MSBuildThisFileDirectory).git</GitRepositoryDirectory>
     <AspNetCoreVersion>3.1.15</AspNetCoreVersion>
+    <NpgsqlVersion>3.1.11</NpgsqlVersion>
     <SubstrateVersion>1.0.39</SubstrateVersion>
     <EFCoreBulkVersion>3.1.26</EFCoreBulkVersion>
     <CcsVersion>1.0.13</CcsVersion>
