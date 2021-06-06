@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SatelliteSite.IdentityModule.Entities;
+using System;
 using System.IO;
 
 namespace SatelliteSite
@@ -37,7 +38,28 @@ namespace SatelliteSite
                 .AddModule<ContestModule.ContestModule<Ccs.RelationalRole<XylabUser, Role, DefaultContext>>>()
                 .AddModule<PlagModule.PlagModule<Plag.Backend.StorageBackendRole<DefaultContext>>>()
                 .AddModule<ExperimentalModule.ExperimentalModule>()
-                .AddDatabase<DefaultContext>((c, b) => b.UseSqlServer(c.GetConnectionString("SqlServerDbConnection"), b => b.UseBulk().MigrationsAssembly("SatelliteSite.Migrations.SqlServer")))
+                .AddDatabase<DefaultContext>((c, b) =>
+                {
+                    if (!string.IsNullOrEmpty(c.GetConnectionString("SqlServerDbConnection")))
+                    {
+                        b.UseSqlServer(
+                            c.GetConnectionString("SqlServerDbConnection"),
+                            b => b.UseBulk()
+                                  .MigrationsAssembly("SatelliteSite.Migrations.SqlServer"));
+                    }
+                    else if (!string.IsNullOrEmpty(c.GetConnectionString("PostgresDbConnection")))
+                    {
+                        b.UseNpgsql(
+                            c.GetConnectionString("PostgresDbConnection"),
+                            b => b.UseBulk()
+                                  .MigrationsAssembly("SatelliteSite.Migrations.Postgres"));
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(
+                            "Please specify SqlServerDbConnection or PostgresDbConnection!");
+                    }
+                })
                 .ConfigureSubstrateDefaults<DefaultContext>()
                 .ConfigureServices((context, services) =>
                 {
@@ -74,6 +96,15 @@ namespace SatelliteSite
                     if (!string.IsNullOrEmpty(context.GetConnectionString("SqlServerDbConnection")))
                     {
                         services.AddSingleton<IDurationCalculator, SqlServerTimeDiff>();
+                    }
+                    else if (!string.IsNullOrEmpty(context.GetConnectionString("PostgresDbConnection")))
+                    {
+                        services.AddSingleton<IDurationCalculator, PostgresTimeDiff>();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(
+                            "Please specify SqlServerDbConnection or PostgresDbConnection!");
                     }
                 });
     }

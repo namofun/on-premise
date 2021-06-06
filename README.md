@@ -33,7 +33,8 @@ Make a file called `appsettings.Production.json`.
   "ConnectionStrings": {
     "ContestKeyword": "{Generate this by your self}",
     "PdfService": "http://localhost:9000/api/render", // Keep this line if you want to export the student report PDF. Refer to https://hub.fastgit.org/alvarcarto/url-to-pdf-api
-    "UserDbConnection": "Server=tcp:127.0.0.1,1433;Initial Catalog={Your SQL Server Database Name};Persist Security Info=False;User ID={Your SQL Server User Name};Password={Your SQL Server Password};MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;"
+    "SqlServerDbConnection": "Server=tcp:{YourServer},1433;Initial Catalog={YourDatabaseName};Persist Security Info=False;User ID={YourUserName};Password={YourPassword};MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;" // If you are using Microsoft SQL Server
+    "PostgresDbConnection": "User ID={YourUserName};Password={YourPassword};Host={YourServer};Port=5432;Database={YourDatabaseName};Pooling=true" // If you are using PostgreSQL
   },
   "FileUploadShortCircuit": true // Keep this line if you want to keep all files produced by DOMjudge judgehost
 }
