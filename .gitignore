@@ -436,3 +436,4 @@ $RECYCLE.BIN/
 src/OnPremise/JobBlobs/
 src/OnPremise/Problems/
 src/OnPremise/Runs/
+docker-compose.yml

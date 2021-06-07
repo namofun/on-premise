@@ -1,11 +1,12 @@
 FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 80 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
 WORKDIR /src
 COPY . .
 WORKDIR "/src/src/OnPremise"
+ENV NUGET_XMLDOC_MODE none
 RUN dotnet build "JudgeOnPremise.csproj" -c Release -o /app/build
 
 FROM build AS publish

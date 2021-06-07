@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+  oj.main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: namofun/on-premise:latest
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      #For HTTPS:
+      #- ASPNETCORE_URLS=http://0.0.0.0:80;https://0.0.0.0:443
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=123456
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/namomo-test.pfx
+      #- ConnectionStrings__PdfService=http://alvarcarto.url-to-pdf-api.service/api/render
+      - ConnectionStrings__ContestKeyword=GenerateYourself
+      - ConnectionStrings__PostgresDbConnection=User ID=postgres;Password=Password12;Host=sql.data;Port=5432;Database=jop;Pooling=true
+      - Mailing__Sender=Judge On Premise
+      - Mailing__User=admin@admin.com
+      - Mailing__Key=gocreateyourself
+      - Mailing__Server=smtp.qq.com
+      - Mailing__Port=587
+      - TZ=Asia/Shanghai
+    ports:
+      - "80:80"
+      #- "443:443"
+    volumes:
+      - /data/namofun/on-premise-postgres/https:/https:ro
+      - /data/namofun/on-premise-postgres/runs:/app/Runs
+      - /data/namofun/on-premise-postgres/problems:/app/Problems
+      - /data/namofun/on-premise-postgres/job-blobs:/app/JobBlobs
+      - /data/namofun/on-premise-postgres/images/problem:/app/wwwroot/images/problem
+      - /data/namofun/on-premise-postgres/images/affiliations:/app/wwwroot/images/affiliations
+      - /data/namofun/on-premise-postgres/keys:/root/.aspnet/DataProtection-Keys
+    depends_on:
+      - sql.data
+
+  sql.data:
+    image: "postgres:12"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Password12"
+      PGDATA: "/data/postgres"
+    volumes:
+       - /data/namofun/on-premise-postgres/database:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
