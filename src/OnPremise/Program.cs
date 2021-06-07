@@ -100,6 +100,7 @@ namespace SatelliteSite
                     else if (!string.IsNullOrEmpty(context.GetConnectionString("PostgresDbConnection")))
                     {
                         services.AddSingleton<IDurationCalculator, PostgresTimeDiff>();
+                        services.AddDbModelSupplier<DefaultContext, PostgresTimeDiffModel<DefaultContext>>();
                     }
                     else
                     {
