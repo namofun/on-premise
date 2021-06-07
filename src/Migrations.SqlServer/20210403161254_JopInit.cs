@@ -161,7 +161,7 @@ namespace SatelliteSite.Migrations
                 {
                     Id = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Abbreviation = table.Column<string>(nullable: false),
+                    Abbreviation = table.Column<string>(maxLength: 450, nullable: false),
                     EmailSuffix = table.Column<string>(nullable: true),
                     CountryCode = table.Column<string>(unicode: false, maxLength: 7, nullable: true)
                 },
@@ -564,7 +564,7 @@ namespace SatelliteSite.Migrations
                     Plan = table.Column<string>(nullable: true),
                     RegisterTime = table.Column<DateTimeOffset>(nullable: true),
                     SubscribeNews = table.Column<bool>(nullable: false),
-                    StudentId = table.Column<string>(nullable: true),
+                    StudentId = table.Column<string>(maxLength: 32, nullable: true),
                     StudentEmail = table.Column<string>(nullable: true),
                     StudentVerified = table.Column<bool>(nullable: false)
                 },
@@ -708,8 +708,8 @@ namespace SatelliteSite.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 450, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 450, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -753,8 +753,8 @@ namespace SatelliteSite.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 450, nullable: false),
+                    Name = table.Column<string>(maxLength: 450, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -987,7 +987,7 @@ namespace SatelliteSite.Migrations
                 columns: table => new
                 {
                     ClassId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<string>(nullable: false)
+                    StudentId = table.Column<string>(maxLength: 32, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1255,7 +1255,8 @@ namespace SatelliteSite.Migrations
                 name: "IX_ContestMembers_ContestId_UserId",
                 table: "ContestMembers",
                 columns: new[] { "ContestId", "UserId" },
-                unique: true);
+                unique: true,
+                filter: "");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContestPrintings_ContestId",
@@ -1276,7 +1277,8 @@ namespace SatelliteSite.Migrations
                 name: "IX_ContestProblems_ContestId_ShortName",
                 table: "ContestProblems",
                 columns: new[] { "ContestId", "ShortName" },
-                unique: true);
+                unique: true,
+                filter: "");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContestTeams_AffiliationId",
@@ -1447,7 +1449,8 @@ namespace SatelliteSite.Migrations
                 name: "IX_PolygonTestcases_ProblemId_Rank",
                 table: "PolygonTestcases",
                 columns: new[] { "ProblemId", "Rank" },
-                unique: true);
+                unique: true,
+                filter: "");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TenantAffiliation_Abbreviation",

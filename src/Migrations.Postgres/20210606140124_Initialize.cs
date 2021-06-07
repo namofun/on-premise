@@ -572,7 +572,7 @@ namespace SatelliteSite.Migrations
                     Plan = table.Column<string>(nullable: true),
                     RegisterTime = table.Column<DateTimeOffset>(nullable: true),
                     SubscribeNews = table.Column<bool>(nullable: false),
-                    StudentId = table.Column<string>(nullable: true),
+                    StudentId = table.Column<string>(maxLength: 32, nullable: true),
                     StudentEmail = table.Column<string>(nullable: true),
                     StudentVerified = table.Column<bool>(nullable: false)
                 },
@@ -1060,7 +1060,7 @@ namespace SatelliteSite.Migrations
                 columns: table => new
                 {
                     ClassId = table.Column<int>(nullable: false),
-                    StudentId = table.Column<string>(nullable: false)
+                    StudentId = table.Column<string>(maxLength: 32, nullable: false)
                 },
                 constraints: table =>
                 {
